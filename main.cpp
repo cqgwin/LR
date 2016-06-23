@@ -1,25 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/* 
- * File:   main.cpp
- * Author: qingguochen
- *
- * Created on 2016年6月23日, 上午11:03
- */
 
 #include <cstdlib>
+#include "ftrl.hpp"
+#include "utils.hpp"
+#include<fstream>
 
+using namespace ftrl;
 using namespace std;
 
-/*
- * 
- */
 int main(int argc, char** argv) {
-
+    ifstream ifile;
+    ifile.open("D:/datasets/test/ftrl.csv");
+    FtrlModel ftrl(10);
+    while(ifile.good()) {
+        char line[4096];
+        ifile.getline(line, 4096);
+        feature_items x;
+        int y;
+        utils::libsvmFomatParse(line, x, y);
+        ftrl.trainSingleInstance(x,y);
+    }
+    string outpath = "D:/datasets/test/w.txt";
+    ftrl.dumpw(outpath);
     return 0;
 }
 
