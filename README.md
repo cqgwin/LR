@@ -1,7 +1,7 @@
 # FTRL
 
-we recommend you to use blade to build this project.
+This is a C++ implementation of Follow-the regularized-Leader.
 
-a C++ implementation of Follow-the regularized-Leader.
+We recommend you to use [blade](https://github.com/chen3feng/typhoon-blade) to build this project.
 
-[Follow-the-Regularized-Leader](http://www.jmlr.org/proceedings/papers/v15/mcmahan11b/mcmahan11b.pdf)
+Reference:[Follow-the-Regularized-Leader](http://www.jmlr.org/proceedings/papers/v15/mcmahan11b/mcmahan11b.pdf)
