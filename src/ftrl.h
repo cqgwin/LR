@@ -42,7 +42,8 @@ public:
 
     bool dumpw(string& filename);
 
-    void multithread_train(ftrl_data &train_data, int thread_idx);
+    void multithread_train(ftrl_data t_data, int thread_idx);
+
 };
 
 

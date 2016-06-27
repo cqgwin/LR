@@ -32,7 +32,8 @@ int main(int argc, char** argv) {
         //ftrl.trainSingleInstance(x,y);
     }
     for(int i = 0; i < thread_num; i++) {
-    	thread_list.push_back(thread(&FtrlModel::multithread_train, &ftrl, &data_list[i], i));
+	ftrl_data t_data = data_list[i];
+    	thread_list.push_back(thread(&FtrlModel::multithread_train, &ftrl, t_data, i));//, i));
     }
     for(int i = 0; i < thread_num; i++) {
 	thread_list[i].join();
