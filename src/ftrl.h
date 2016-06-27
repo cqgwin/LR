@@ -38,11 +38,11 @@ public:
 
     float logistic(feature_items& x);
 
-    bool trainSingleInstance(feature_items& x, int y);
+    bool train_single_instance(feature_items& x, int y);
 
     bool dumpw(string& filename);
 
-    void multithread_train(
+    void multithread_train(ftrl_data &train_data, int thread_idx);
 };
 
 

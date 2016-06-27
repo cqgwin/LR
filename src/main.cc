@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include<vector>
 #include "ftrl.h"
 #include "utils.h"
 #include<fstream>
@@ -15,9 +16,9 @@ int main(int argc, char** argv) {
     int thread_num = thread::hardware_concurrency() - 1;
     printf("thread num = %d\n",thread_num);
 
-    thread t[thread_num];
+    vector<thread> thread_list;
 
-    vector<ftrl_data> data_list[thread_num];
+    vector<ftrl_data> data_list(thread_num);
     long inc = 0;
     while(ifile.good()) {
         char line[4096];
@@ -31,10 +32,10 @@ int main(int argc, char** argv) {
         //ftrl.trainSingleInstance(x,y);
     }
     for(int i = 0; i < thread_num; i++) {
-    	t[i] = thread(&FtrlModel::multithread_train, &ftrl, data_list[i], i);
+    	thread_list.push_back(thread(&FtrlModel::multithread_train, &ftrl, &data_list[i], i));
     }
     for(int i = 0; i < thread_num; i++) {
-	t[i].join();
+	thread_list[i].join();
     }
     string outpath = "/home/eleven/Datasets/out.csv";
     ftrl.dumpw(outpath);

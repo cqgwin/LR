@@ -43,7 +43,7 @@ float FtrlModel::logistic(feature_items& x) {
     return sigmod(sum);
 }
 
-bool FtrlModel::trainSingleInstance(feature_items& x, int y) {
+bool FtrlModel::train_single_instance(feature_items& x, int y) {
     int sum = 0.0;
     for (feature_items::iterator pos = x.begin(); pos != x.end(); pos++) {
         int i = pos->first;
@@ -82,9 +82,9 @@ bool FtrlModel::dumpw(string& filename) {
     return true;
 }
 
-void FtrlModel::multithread_train(ftrl_data train_data,  int thread_idx) {
-    for(int i = 0; i < train_data.x_data.size(); i++) {
-        trainSingleInstance(train_data.x_data[i], train_data.y_data[i]);
+void FtrlModel::multithread_train(ftrl_data &train_data, int thread_idx) {
+    for(unsigned int i = 0; i < train_data.x_data.size(); i++) {
+        train_single_instance(train_data.x_data[i], train_data.y_data[i]);
     }
 }
 

@@ -1,5 +1,4 @@
 blade-bin
-BLADE_ROOT
 build64_release/
 .Building.lock
 .sconsign.dblite
