@@ -3,5 +3,7 @@ cc_binary(
     srcs = ['ftrl.cc',
 	'main.cc',
 	'utils.cc',],
-    deps = []
+    deps = [],
+    extra_cppflags = [
+	'-std=c++11',]
 )

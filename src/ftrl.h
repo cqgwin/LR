@@ -36,6 +36,8 @@ public:
     bool trainSingleInstance(feature_items& x, int y);
 
     bool dumpw(string& filename);
+
+    void multithread_train(
 };
 
 

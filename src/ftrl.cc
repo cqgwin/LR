@@ -69,8 +69,10 @@ bool FtrlModel::trainSingleInstance(feature_items& x, int y) {
 
 bool FtrlModel::dumpw(string& filename) {
     ofstream ofile;
-    ofile.open(filename.c_str());
+    ofile.open(filename.c_str(), std::fstream::out);
+    printf("%d\n", dim);
     for (int i = 0; i < dim; i++) {
+        printf("%f\n",w[i]);
         if (w[i] > 10e-10 || w[i]<-10e-10)
             ofile << i << ":" << w[i] << endl;
     }
