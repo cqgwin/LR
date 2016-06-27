@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "ftrl.h"
 
 inline int sgn(float x) {
@@ -78,6 +80,12 @@ bool FtrlModel::dumpw(string& filename) {
     }
     ofile.close();
     return true;
+}
+
+void FtrlModel::multithread_train(ftrl_data train_data,  int thread_idx) {
+    for(int i = 0; i < train_data.x_data.size(); i++) {
+        trainSingleInstance(train_data.x_data[i], train_data.y_data[i]);
+    }
 }
 
 

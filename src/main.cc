@@ -6,10 +6,6 @@
 #include<thread>
 using namespace std;
 
-typedef struct ftrl_data_struct{
-    vector<feature_items> x_data;
-    vector<int> y_data;
-} ftrl_data;
 
 int main(int argc, char** argv) {
     ifstream ifile;

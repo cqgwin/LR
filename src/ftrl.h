@@ -11,6 +11,11 @@ using namespace std;
 
 typedef std::map<int, int> feature_items;
 
+typedef struct ftrl_data_struct{
+    vector<feature_items> x_data;
+    vector<int> y_data;
+} ftrl_data;
+
 inline int sgn(float x);
 
 float sigmod(float x);
