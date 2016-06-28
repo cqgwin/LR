@@ -88,4 +88,14 @@ void FtrlModel::multithread_train(ftrl_data train_data, int thread_idx) {
     //}
 }
 
+int FtrlModel::predict_single_instance(feature_items &x) {
+    float val = 0.0;
+    for(feature_items::iterator pos = x.begin(); pos != x.end(); pos++) {
+	val += w[pos->first] * pos->second;
+    }
+    if(val > 0)
+	return 1;
+    else
+	return -1;
+}
 

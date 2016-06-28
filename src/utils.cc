@@ -46,3 +46,30 @@ void utils::libsvmFomatParse(char * line,feature_items & x, int &y) {
         x[idx_int] = val_int;
     }
 }
+
+float utils::calculate_precision(std::vector<int> &predict_y, std::vector<int> &y) {
+    if(predict_y.size() != y.size())
+	return -1.0;
+    int true_pos = 0, false_pos = 0;
+    for(unsigned int i = 0; i < predict_y.size(); i++) {
+	if(predict_y[i] == y[i] && predict_y[i] == 1) {
+	    true_pos++;
+	}
+	if(predict_y[i] != y[i] && y[i] == 1) {
+	    false_pos++;
+        }
+    }
+    return 1.0 * true_pos / (true_pos + false_pos);
+}
+
+float utils::calculate_recall(std::vector<int> &predict_y, std::vector<int> &y) {
+    int pos_num = 0, rec_num = 0;
+    for(unsigned int i = 0; i < predict_y.size(); i++) {
+	if(predict_y[i] == 1 && y[i] == 1)
+	    pos_num++;
+        if(y[i] == 1)
+	    rec_num++;
+    }
+    return 1.0 * pos_num / rec_num;
+}
+ 
