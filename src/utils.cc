@@ -25,7 +25,7 @@ std::vector<std::string> utils::split(const std::string &s, const std::string & 
     return v;
 }
 
-void utils::libsvmFomatParse(char * line,feature_items & x, int &y) {
+void utils::libsvm_format_parse(char * line,feature_items & x, int &y) {
     char * label, * idx, * val, * endptr;
     label = strtok(line, " \t\n");
     int idx_int;

@@ -6,6 +6,7 @@ cc_binary(
         '-std=c++11',],
     srcs = ['ftrl.cc',
 	'main.cc',
-	'utils.cc',],
+	'utils.cc',
+        'fast_ftrl.cc',],
     deps = [],
 )

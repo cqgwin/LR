@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
         ifile.getline(line, 4096);
         feature_items x;
         int y;
-        utils::libsvmFomatParse(line, x, y);
+        utils::libsvm_format_parse(line, x, y);
 	int idx = inc % thread_num;
 	data_list[idx].x_data.push_back(x);
 	data_list[idx].y_data.push_back(y);
