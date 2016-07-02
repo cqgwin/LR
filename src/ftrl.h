@@ -16,9 +16,21 @@ typedef struct ftrl_data_struct{
     vector<int> y_data;
 } ftrl_data;
 
-inline int sgn(float x);
+inline int sgn(float x) {
+    if (x > 0)
+        return 1;
+    if (x < 0)
+        return -1;
+    return 1;
+}
 
-float sigmod(float x);
+inline float sigmod(float x) {
+    if (x < -35)
+        x = -35;
+    if (x > 35)
+        x = 35;
+    return 1 / (1 + exp(-1.0 * x));
+}
 
 class FtrlModel {
 private:

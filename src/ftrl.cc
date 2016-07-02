@@ -2,21 +2,6 @@
 
 #include "ftrl.h"
 
-inline int sgn(float x) {
-    if (x > 0)
-        return 1;
-    if (x < 0)
-        return -1;
-    return 1;
-}
-
-float sigmod(float x) {
-    if (x < -35)
-        x = -35;
-    if (x > 35)
-        x = 35;
-    return 1 / (1 + exp(-1.0 * x));
-}
 
 FtrlModel::FtrlModel(int _dim, float _lambda1, float _lambda2, float _alpha, float _beta) : dim(_dim), lambda1(_lambda1), lambda2(_lambda2), alpha(_alpha), beta(_beta) {
     w = new float[_dim]();

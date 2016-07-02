@@ -8,9 +8,21 @@
 
 using namespace std;
 
-inline int sgn(float x);
+inline int sgn(float x) {
+    if (x > 0)
+        return 1;
+    if (x < 0)
+        return -1;
+    return 0;
+}
 
-inline float sigmod(float x);
+inline float sigmod(float x) {
+    if (x < -35)
+        x = -35;
+    if (x > 35)
+        x = 35;
+    return 1 / (1 + exp(-1.0 * x));
+}
 
 class FastFtrlModel {
 private:
@@ -28,7 +40,13 @@ public:
 
     ~FastFtrlModel();
 
-    inline float logistic(vector<int>& x);
+    inline float logistic(vector<int>& x) {
+		float sum = 0;
+		for (unsigned int i = 0; i < x.size(); i++) {
+			sum += w[x[i]];
+		}
+		return sigmod(sum);
+	}
 
     void train_single_instance(vector<int>& x, int y);
 

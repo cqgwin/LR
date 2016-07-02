@@ -2,21 +2,6 @@
 
 #include "fast_ftrl.h"
 
-inline int sgn(float x) {
-    if (x > 0)
-        return 1;
-    if (x < 0)
-        return -1;
-    return 0;
-}
-
-inline float sigmod(float x) {
-    if (x < -35)
-        x = -35;
-    if (x > 35)
-        x = 35;
-    return 1 / (1 + exp(-1.0 * x));
-}
 
 FastFtrlModel::FastFtrlModel(int _dim, float _lambda1, float _lambda2, float _alpha, float _beta) : dim(_dim), lambda1(_lambda1), lambda2(_lambda2), alpha(_alpha), beta(_beta) {
     w = new float[_dim]();
@@ -30,13 +15,6 @@ FastFtrlModel::~FastFtrlModel() {
     delete[] n;
 }
 
-inline float FastFtrlModel::logistic(vector<int>& x) {
-    float sum = 0;
-    for (unsigned int i = 0; i < x.size(); i++) {
-        sum += w[x[i]];
-    }
-    return sigmod(sum);
-}
 
 void FastFtrlModel::train_single_instance(vector<int>& x, int y) {
     int sum = 0.0;
