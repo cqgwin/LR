@@ -1,5 +1,5 @@
-OBJ = main.o ftrl.o utils.o fast_ftrl.o
-CFLAGS = -g -Wall -pthread -std=c++11
+OBJ = main.o ftrl.o utils.o
+CFLAGS = -g -Wall -pthread -std=c++0x
 CC = g++ $(CFLAGS)
 
 ftrl: ${OBJ}
@@ -15,4 +15,6 @@ utils.o: utils.cc utils.h
 	${CC} -c utils.cc
 
 clean:
-	rm ftrl.o *.o
+	rm *.o
+
+

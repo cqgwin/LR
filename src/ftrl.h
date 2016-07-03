@@ -56,10 +56,11 @@ public:
 
     void multithread_train(ftrl_data t_data, int thread_idx);
 
-    int predict_single_instance(feature_items &x);
+    float predict_single_instance(feature_items &x);
 };
 
 
 
 #endif /* FTRL_HPP */
+
 

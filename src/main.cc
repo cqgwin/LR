@@ -10,36 +10,54 @@ using namespace std;
 
 int main(int argc, char** argv) {
     ifstream ifile;
-    ifile.open("/home/eleven/Datasets/ftrl.csv");
-    FtrlModel ftrl(6);
+    ifile.open("/home/qspace/user/tools/vw/data/06-train");
+    FtrlModel ftrl(1730);
     
-    int thread_num = thread::hardware_concurrency() - 1;
+    int thread_num = 1;//thread::hardware_concurrency() - 1;
     printf("thread num = %d\n",thread_num);
 
-    vector<thread> thread_list;
+    //vector<thread> thread_list;
 
-    vector<ftrl_data> data_list(thread_num);
+    //vector<ftrl_data> data_list(thread_num);
     long inc = 0;
     while(ifile.good()) {
-        char line[4096];
-        ifile.getline(line, 4096);
+        string line;
+        getline(ifile, line);
         feature_items x;
         int y;
-        utils::libsvm_format_parse(line, x, y);
-	int idx = inc % thread_num;
+        utils::libsvm_format_parse(line.c_str(), x, y);
+	/*int idx = inc % thread_num;
 	data_list[idx].x_data.push_back(x);
-	data_list[idx].y_data.push_back(y);
-        //ftrl.trainSingleInstance(x,y);
+	data_list[idx].y_data.push_back(y);*/
+	ftrl.train_single_instance(x,y);
     }
-    for(int i = 0; i < thread_num; i++) {
+    /*for(int i = 0; i < thread_num; i++) {
 	ftrl_data t_data = data_list[i];
-    	thread_list.push_back(thread(&FtrlModel::multithread_train, &ftrl, t_data, i));//, i));
+    	thread_list.push_back(thread(&FtrlModel::multithread_train, &ftrl, t_data, i));
     }
     for(int i = 0; i < thread_num; i++) {
-	thread_list[i].join();
-    }
-    string outpath = "/home/eleven/Datasets/out.csv";
+		thread_list[i].join();
+    }*/
+    string outpath = "/home/qspace/data/user/qingguochen/dataset/ftrl/w.txt";
     ftrl.dumpw(outpath);
+    
+    vector<float> predict;
+    vector<int> Y;
+    ifstream test_file;
+    test_file.open("/home/qspace/user/tools/vw/data/06-test");
+    while(test_file.good()) {
+        string line;
+        getline(test_file, line);
+        feature_items x;
+        int y;
+	utils::libsvm_format_parse(line.c_str(), x, y);
+	predict.push_back(ftrl.predict_single_instance(x));
+	Y.push_back(y);
+    }
+    
+    fstream ofile("/home/qspace/data/user/qingguochen/dataset/ftrl/predict.txt", std::fstream::out);
+    for(unsigned int i = 0; i < Y.size(); i++) {
+	ofile<<predict[i]<<" "<<Y[i]<<endl;
+    }
     return 0;
 }
-

@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+ *  * To change this license header, choose License Headers in Project Properties.
+ *   * To change this template file, choose Tools | Templates
+ *    * and open the template in the editor.
+ *     */
 
 #include"utils.h"
 #include<string.h>
@@ -25,9 +25,11 @@ std::vector<std::string> utils::split(const std::string &s, const std::string & 
     return v;
 }
 
-void utils::libsvm_format_parse(char * line,feature_items & x, int &y) {
+void utils::libsvm_format_parse(const char * line,feature_items & x, int &y) {
     char * label, * idx, * val, * endptr;
-    label = strtok(line, " \t\n");
+    char* t_char = const_cast<char*>(line);
+
+    label = strtok(t_char, " \t\n");
     int idx_int;
     int val_int;
     if(label == NULL)
@@ -73,3 +75,4 @@ float utils::calculate_recall(std::vector<int> &predict_y, std::vector<int> &y) 
     return 1.0 * pos_num / rec_num;
 }
  
+
