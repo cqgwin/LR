@@ -1,6 +1,6 @@
 #include <vector>
 
-#include "fast_ftrl.h"
+#include "fast_ftrl_lr.h"
 
 
 FastFtrlModel::FastFtrlModel(int _dim, float _lambda1, float _lambda2, float _alpha, float _beta) : dim(_dim), lambda1(_lambda1), lambda2(_lambda2), alpha(_alpha), beta(_beta) {

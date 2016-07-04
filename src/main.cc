@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include<vector>
-#include "ftrl.h"
+#include "ftrl_lr.h"
 #include "utils.h"
 #include<fstream>
 #include<iostream>

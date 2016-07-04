@@ -1,6 +1,6 @@
 
-#ifndef FTRL_HPP
-#define FTRL_HPP
+#ifndef FAST_FTRL_LR_HPP
+#define FAST_FTRL_LR_HPP
 
 #include<cmath>
 #include<map>
@@ -59,5 +59,5 @@ public:
 
 
 
-#endif /* FTRL_HPP */
+#endif
 
