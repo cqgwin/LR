@@ -62,6 +62,8 @@ public:
     void multithread_train(string path, int thread_idx);
 
     float predict_single_instance(feature_items &x);
+    
+    void multithread_predict(string test_path,int thread_idx, vector<float>&predict, vector<int>&Y);
 };
 
 

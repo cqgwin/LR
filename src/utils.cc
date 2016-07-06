@@ -26,26 +26,13 @@ std::vector<std::string> utils::split(const std::string &s, const std::string & 
 }
 
 void utils::libsvm_format_parse(const char * line,feature_items & x, int &y) {
-    char * label, * idx, * val, * endptr;
-    char* t_char = const_cast<char*>(line);
-
-    label = strtok(t_char, " \t\n");
-    int idx_int;
-    int val_int;
-    if(label == NULL)
-        return;
-    y = int(strtol(label, &endptr,10));
-    if(endptr == label || *endptr != '\0')
-        return;
-    
-    while(1) {
-        idx = strtok(NULL, ":");
-        val = strtok(NULL, " \t");
-        if(val == NULL)
-            break;
-        idx_int = (int) strtol(idx, &endptr, 10);
-        val_int = (int) strtol(val, &endptr, 10);
-        x[idx_int] = val_int;
+    std::vector<std::string> items1 = split(line, " ");
+    if(items1.size()<=1)
+	return;
+    y = atoi(items1[0].c_str());
+    for(unsigned int i = 1; i < items1.size(); i++) {
+        std::vector<std::string> items2 = split(items1[i], ":");
+        x[atoi(items2[0].c_str())] = atoi(items2[1].c_str());
     }
 }
 

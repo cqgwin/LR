@@ -77,14 +77,16 @@ void FtrlModel::multithread_train(string path, int thread_idx) {
     sprintf(t_char, "%d", thread_idx); 
     string t_str = t_char;
     ifile.open(path + t_str);
-    int idx = 0;
-    while(ifile.good()) {
-        string line;
- 	getline(ifile, line);
+    
+    if(!ifile.good())
+	return;
+    string line;
+    while(getline(ifile, line)) {
+        if(line=="")
+	    break;
  	feature_items x;
 	int y;
  	utils::libsvm_format_parse(line.c_str(), x, y);
-	cout<<"thread:"<<thread_idx<<" "<<idx++<<endl;
         train_single_instance(x, y);
     }
 }
@@ -102,4 +104,23 @@ float FtrlModel::predict_single_instance(feature_items &x) {
 	return -1;
 }
 
+void FtrlModel::multithread_predict(string test_path,int thread_idx, vector<float>&predict, vector<int>&Y){
+    ifstream ifile;
+    char t_char[10];
+    sprintf(t_char, "%d", thread_idx);
+    string t_str = t_char;
+    ifile.open(test_path + t_str);
+    if(!ifile.good())
+	return;
+    string line;
+    while(getline(ifile, line)) {
+	if(line=="")
+	    break;
+        feature_items x;
+        int y;
+        utils::libsvm_format_parse(line.c_str(), x, y);
+        Y.push_back(y);
+	predict.push_back(predict_single_instance(x));
+    }
+}
 
