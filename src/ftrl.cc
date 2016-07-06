@@ -1,6 +1,4 @@
-#include <vector>
-
-#include "ftrl_lr.h"
+#include "ftrl.h"
 
 
 FtrlModel::FtrlModel(int _dim, float _lambda1, float _lambda2, float _alpha, float _beta) : dim(_dim), lambda1(_lambda1), lambda2(_lambda2), alpha(_alpha), beta(_beta) {
@@ -20,7 +18,7 @@ float FtrlModel::logistic(feature_items& x) {
     for (feature_items::iterator pos = x.begin(); pos != x.end(); pos++) {
         int idx = pos->first;
         int val = pos->second;
-        if (idx > dim) {
+        if (idx > 1730) {
             return 0;
         }
         sum += val * w[idx];
@@ -33,11 +31,15 @@ bool FtrlModel::train_single_instance(feature_items& x, int y) {
     for (feature_items::iterator pos = x.begin(); pos != x.end(); pos++) {
         int i = pos->first;
         int val = pos->second;
+	if(i>1730)
+	    return false;
         if (abs(z[i]) < lambda1)
             w[i] = 0;
-        else
-            w[i] = -(z[i] - sgn(z[i]) * lambda1) / ((beta + sqrt(n[i])) / alpha + lambda2);
-        sum += val * w[i];
+        else {
+            float t = -(z[i] - sgn(z[i]) * lambda1) / ((beta + sqrt(n[i])) / alpha + lambda2);
+            w[i] = t;
+	}
+	sum += val * w[i];
     }
     float p = sigmod(sum);
     float g = 0.0;
@@ -47,6 +49,8 @@ bool FtrlModel::train_single_instance(feature_items& x, int y) {
         int i = pos->first;
         int val = pos->second;
         g = (p - y) * val;
+	if(i>1730)
+ 	    return false;
         sigma = (sqrt(n[i] + g * g) - sqrt(n[i])) / alpha;
         z[i] += g - sigma * w[i];
         n[i] += g*g;
@@ -67,9 +71,21 @@ bool FtrlModel::dumpw(string& filename) {
     return true;
 }
 
-void FtrlModel::multithread_train(ftrl_data train_data, int thread_idx) {
-    for(unsigned int i = 0; i < train_data.x_data.size(); i++) {
-        train_single_instance(train_data.x_data[i], train_data.y_data[i]);
+void FtrlModel::multithread_train(string path, int thread_idx) {
+    ifstream ifile;
+    char t_char[10];
+    sprintf(t_char, "%d", thread_idx); 
+    string t_str = t_char;
+    ifile.open(path + t_str);
+    int idx = 0;
+    while(ifile.good()) {
+        string line;
+ 	getline(ifile, line);
+ 	feature_items x;
+	int y;
+ 	utils::libsvm_format_parse(line.c_str(), x, y);
+	cout<<"thread:"<<thread_idx<<" "<<idx++<<endl;
+        train_single_instance(x, y);
     }
 }
 

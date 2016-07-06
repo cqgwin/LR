@@ -1,10 +1,15 @@
 
-#ifndef FTRL_LR_HPP
-#define FTRL_LR_HPP
+#ifndef FTRL_HPP
+#define FTRL_HPP
 
 #include<cmath>
 #include<map>
 #include<fstream>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<stdlib.h>
+#include"utils.h"
 
 using namespace std;
 
@@ -44,7 +49,7 @@ private:
     float alpha;
     float beta;
 public:
-    FtrlModel(int _dim, float _lambda1 = 1, float _lambda2 = 1, float _alpha = 0.1, float _beta = 1);
+    FtrlModel(int _dim, float _lambda1 = 0.001, float _lambda2 = 0.001, float _alpha = 0.005, float _beta = 0.1);
 
     ~FtrlModel();
 
@@ -54,13 +59,13 @@ public:
 
     bool dumpw(string& filename);
 
-    void multithread_train(ftrl_data t_data, int thread_idx);
+    void multithread_train(string path, int thread_idx);
 
     float predict_single_instance(feature_items &x);
 };
 
 
 
-#endif
+#endif /* FTRL_HPP */
 
 
