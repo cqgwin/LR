@@ -10,7 +10,7 @@ using namespace std;
 
 
 int main(int argc, char** argv) {
-    FtrlModel ftrl(1800);
+    FtrlModel ftrl(1725);
     
     int thread_num = 10;//thread::hardware_concurrency() - 1;
     printf("thread num = %d\n",thread_num);
@@ -34,8 +34,9 @@ int main(int argc, char** argv) {
     string test_path = "/home/qspace/user/tools/vw/bigData/test_files/test.";
     vector<vector<float> > predict_list(thread_num);
     vector<vector<int> > Y_list(thread_num);
+    
     for(int i = 0; i < thread_num; i++) {
-        thread_list.push_back(thread(&FtrlModel::multithread_predict, &ftrl, test_path, i, predict_list[i], Y_list[i]));
+        thread_list.push_back(thread(&FtrlModel::multithread_predict, &ftrl, test_path, i, &predict_list[i], &Y_list[i]));
     }
     for(int i = 0; i < thread_num; i++) {
 	thread_list[i].join();
@@ -45,7 +46,7 @@ int main(int argc, char** argv) {
 	predict.insert(predict.end(), predict_list[i].begin(), predict_list[i].end());
 	Y.insert(Y.end(), Y_list[i].begin(), Y_list[i].end());
     }
-    cout<<Y.size()<<endl;
+    
     fstream ofile("/home/qspace/data/user/qingguochen/dataset/ftrl/predict.txt", std::fstream::out);
     for(unsigned int i = 0; i < Y.size(); i++) {
 	ofile<<predict[i]<<"\t"<<Y[i]<<endl;

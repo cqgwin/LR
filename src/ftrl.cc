@@ -18,7 +18,7 @@ float FtrlModel::logistic(feature_items& x) {
     for (feature_items::iterator pos = x.begin(); pos != x.end(); pos++) {
         int idx = pos->first;
         int val = pos->second;
-        if (idx > 1730) {
+        if (idx > dim) {
             return 0;
         }
         sum += val * w[idx];
@@ -31,7 +31,7 @@ bool FtrlModel::train_single_instance(feature_items& x, int y) {
     for (feature_items::iterator pos = x.begin(); pos != x.end(); pos++) {
         int i = pos->first;
         int val = pos->second;
-	if(i>1730)
+	if(i>dim)
 	    return false;
         if (abs(z[i]) < lambda1)
             w[i] = 0;
@@ -49,7 +49,7 @@ bool FtrlModel::train_single_instance(feature_items& x, int y) {
         int i = pos->first;
         int val = pos->second;
         g = (p - y) * val;
-	if(i>1730)
+	if(i>dim)
  	    return false;
         sigma = (sqrt(n[i] + g * g) - sqrt(n[i])) / alpha;
         z[i] += g - sigma * w[i];
@@ -104,7 +104,7 @@ float FtrlModel::predict_single_instance(feature_items &x) {
 	return -1;
 }
 
-void FtrlModel::multithread_predict(string test_path,int thread_idx, vector<float>&predict, vector<int>&Y){
+void FtrlModel::multithread_predict(string test_path,int thread_idx, vector<float>* predict, vector<int>* Y){
     ifstream ifile;
     char t_char[10];
     sprintf(t_char, "%d", thread_idx);
@@ -113,14 +113,17 @@ void FtrlModel::multithread_predict(string test_path,int thread_idx, vector<floa
     if(!ifile.good())
 	return;
     string line;
+    int idx = 0;
     while(getline(ifile, line)) {
 	if(line=="")
 	    break;
+        idx++;
         feature_items x;
         int y;
         utils::libsvm_format_parse(line.c_str(), x, y);
-        Y.push_back(y);
-	predict.push_back(predict_single_instance(x));
+        Y->push_back(y);
+	
+	predict->push_back(predict_single_instance(x));
     }
 }
 

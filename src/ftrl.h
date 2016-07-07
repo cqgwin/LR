@@ -49,7 +49,7 @@ private:
     float alpha;
     float beta;
 public:
-    FtrlModel(int _dim, float _lambda1 = 0.001, float _lambda2 = 0.001, float _alpha = 0.005, float _beta = 0.1);
+    FtrlModel(int _dim, float _lambda1 = 0.001, float _lambda2 = 0.001, float _alpha = 0.05, float _beta = 0.1);
 
     ~FtrlModel();
 
@@ -63,7 +63,7 @@ public:
 
     float predict_single_instance(feature_items &x);
     
-    void multithread_predict(string test_path,int thread_idx, vector<float>&predict, vector<int>&Y);
+    void multithread_predict(string test_path,int thread_idx, vector<float>* predict, vector<int>* Y);
 };
 
 
