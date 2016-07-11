@@ -20,7 +20,7 @@ std::vector<std::string> utils::split(const std::string &s, const std::string & 
     return v;
 }
 
-void utils::libsvm_format_parse(const char * line,feature_items & x, int &y) {
+void utils::libsvm_format_parse(const char* line,feature_items& x, int& y) {
     std::vector<std::string> items1 = split(line, " ");
     if(items1.size()<=1)
 	return;
@@ -28,6 +28,16 @@ void utils::libsvm_format_parse(const char * line,feature_items & x, int &y) {
     for(unsigned int i = 1; i < items1.size(); i++) {
         std::vector<std::string> items2 = split(items1[i], ":");
         x[atoi(items2[0].c_str())] = atoi(items2[1].c_str());
+    }
+}
+
+void utils::feature_parse(const char* line, std::vector<int>& features, int& y) {
+    std::vector<std::string> items1 = split(line, " ");
+    if(items1.size() <= 1)
+	return;
+    y = atoi(items1[0].c_str());
+    for(unsigned int i = 1; i < items1.size(); i++) {
+	features.push_back(atoi(items1[i].c_str()));
     }
 }
 
