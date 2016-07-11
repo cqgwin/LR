@@ -25,19 +25,20 @@ float FtrlModel::logistic(fea_items& x) {
     return sigmod(sum);
 }
 
+/*
 bool FtrlModel::train_single_instance(fea_items& x, int y) {
     int sum = 0.0;
-    for (fea_items::iterator pos = x.begin(); pos != x.end(); pos++) {
+    for(fea_items::iterator pos = x.begin(); pos != x.end(); pos++) {
         int i = *pos;
          
 	sum += w[i];
 	if(i>dim)
 	    return false;
-        if (abs(z[i]) < lambda1)
-            w[i] = 0;
-        else {
-            float t = -(z[i] - sgn(z[i]) * lambda1) / ((beta + sqrt(n[i])) / alpha + lambda2);
-            w[i] = t;
+    if (abs(z[i]) < lambda1)
+        w[i] = 0;
+    else {
+        float t = -(z[i] - sgn(z[i]) * lambda1) / ((beta + sqrt(n[i])) / alpha + lambda2);
+        w[i] = t;
 	}
 	//sum += w[i];
     }
@@ -49,14 +50,36 @@ bool FtrlModel::train_single_instance(fea_items& x, int y) {
         int i = *pos;
        	
         g = (p - y);
-	if(i>dim)
- 	    return false;
+	    if(i>dim)
+ 	        return false;
         sigma = (sqrt(n[i] + g * g) - sqrt(n[i])) / alpha;
         z[i] += g - sigma * w[i];
         n[i] += g*g;
     }
     return true;
+}*/
+
+bool FtrlModel::train_single_instance(fea_items& x, int y) {
+    float p = logistic(x);
+    
+    for(fea_items::iterator pos = x.begin(); pos != x.end(); pos++) {
+        int i = *pos;
+        if(i>dim)
+            return false;
+        float g = p-y;
+        float sigma = (sqrt(n[i] + g * g) - sqrt(n[i])) / alpha;
+        z[i] += g - sigma * w[i]; 
+        n[i] += g*g;
+        if (abs(z[i]) < lambda1)
+            w[i] = 0;
+        else {
+            float t = -(z[i] - sgn(z[i]) * lambda1) / ((beta + sqrt(n[i])) / alpha + lambda2);
+            w[i] = t;
+        }
+    }
+    return true;
 }
+    
 
 void FtrlModel::clean_w() {
     for(int i = 0; i < dim; i++) {
@@ -89,9 +112,9 @@ void FtrlModel::multithread_train(string path, int thread_idx) {
     while(getline(ifile, line)) {
         if(line=="")
 	    break;
- 	fea_items x;
-	int y;
- 	utils::feature_parse(line.c_str(), x, y);
+ 	    fea_items x;
+	    int y;
+ 	    utils::feature_parse(line.c_str(), x, y);
         train_single_instance(x, y);
     }
 }
@@ -99,14 +122,14 @@ void FtrlModel::multithread_train(string path, int thread_idx) {
 float FtrlModel::predict_single_instance(fea_items &x) {
     float val = 0.0;
     for(fea_items::iterator pos = x.begin(); pos != x.end(); pos++) {
-	val += w[*pos];
+	    val += w[*pos];
     }
     float result = sigmod(val);
-    return val;
+        return val;
     if(result > 0)
-	return 1;
+	    return 1;
     else
-	return -1;
+	    return -1;
 }
 
 void FtrlModel::multithread_predict(string test_path,int thread_idx, vector<float>* predict, vector<int>* Y){
@@ -116,19 +139,19 @@ void FtrlModel::multithread_predict(string test_path,int thread_idx, vector<floa
     string t_str = t_char;
     ifile.open(test_path + t_str);
     if(!ifile.good())
-	return;
+	    return;
     string line;
     int idx = 0;
     while(getline(ifile, line)) {
-	if(line=="")
-	    break;
+	    if(line=="")
+	        break;
         idx++;
         fea_items x;
         int y;
         utils::feature_parse(line.c_str(), x, y);
         Y->push_back(y);
         	
-	predict->push_back(predict_single_instance(x));
+	    predict->push_back(predict_single_instance(x));
     }
 }
 
