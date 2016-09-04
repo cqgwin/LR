@@ -9,8 +9,6 @@
 //       Revision:  none
 //       Compiler:  g++
 // 
-//         Author:  qingguochen (), qingguochen@tencent.com
-//        Company:  
 // 
 // =====================================================================================
 #include "local_filesys.h"

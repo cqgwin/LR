@@ -9,7 +9,6 @@
 //       Revision:  none
 //       Compiler:  g++
 // 
-//         Author:  qingguochen (), qingguochen@tencent.com
 //        Company:  
 // 
 // =====================================================================================
@@ -29,7 +28,11 @@
 #include <iostream>
 #include <fstream>
 
+using std::vector;
+using std::map;
+using std::string;
+
 class FileSystem {
 
-}
-
+};
+#endif

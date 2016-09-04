@@ -9,8 +9,6 @@
 //       Revision:  none
 //       Compiler:  g++
 // 
-//         Author:  qingguochen (), qingguochen@tencent.com
-//        Company:  
 // 
 // =====================================================================================
 
@@ -25,7 +23,7 @@ class LocalFileSystem : public FileSystem {
          static LocalFileSystem instance;
          return &instance;
     }
-    static GetDirFiles(const string& dir_name);
+    static vector<string> GetDirFiles(const string& dir_name);
     char* ReadLine(FILE* input);
  private:
     LocalFileSystem() {
