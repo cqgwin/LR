@@ -21,7 +21,7 @@
 #include <string>
 #include <vector>
 
-#include "common/utils.h"
+#include "../common/utils.h"
 
 using std::string;
 using std::vector;

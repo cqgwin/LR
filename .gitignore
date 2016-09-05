@@ -3,3 +3,6 @@ build64_release/
 .Building.lock
 .sconsign.dblite
 build
+common/.*
+io/.*
+ftrl/.*

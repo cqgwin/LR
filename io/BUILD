@@ -1,4 +1,4 @@
-cc_binary(
+cc_library(
     name = 'io',
     extra_cppflags = [
         '-Wl,--no-as-needed',

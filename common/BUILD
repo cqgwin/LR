@@ -1,4 +1,4 @@
-cc_binary(
+cc_library(
     name = 'common',
     extra_cppflags = [
         '-Wl,--no-as-needed',

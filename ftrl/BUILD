@@ -1,4 +1,4 @@
-cc_binary(
+cc_library(
     name = 'ftrl',
     extra_cppflags = [
         '-Wl,--no-as-needed',
@@ -6,5 +6,8 @@ cc_binary(
         '-std=c++11',],
     srcs = [
     'ftrl.cc',],
-    deps = [],
+    deps = [
+        '//mmbiz/mmbizdatacomm/ftrl/ftrl_lr_64/common:common',
+        '//mmbiz/mmbizdatacomm/ftrl/ftrl_lr_64/io:io',
+    ],
 )

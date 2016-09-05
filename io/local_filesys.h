@@ -15,7 +15,7 @@
 #ifndef LOCAL_FILESYS_H_
 #define LOCAL_FILESYS_H_
 
-#include "io/filesys.h"
+#include "filesys.h"
 
 class LocalFileSystem : public FileSystem {
  public:

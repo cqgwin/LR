@@ -8,9 +8,10 @@
 #include <fstream>
 #include <iostream>
 
-#include "common/utils.h"
-#include "io/local_filesys.h"
-#include "io/parser.h"
+#include "../common/utils.h"
+#include "../io/local_filesys.h"
+#include "../io/parser.h"
+
 
 struct pnode{
     float w;
@@ -74,13 +75,13 @@ public:
 
     float CurrentLoss() { return current_loss_; }
 
-    void MultithreadTrain(const string& path, int thread_idx);
+    void MultithreadTrain(const string& train_dir, const vector<string>& file_list, int thread_idx, int thread_num);
     
-    void Test(const string& test_file, vector<int>& Y, vector<float>& predict);
+    void Predict(const string& test_file, const string& predict_path);
 
     float PredictSingleInstance(const fea_items &x);
     
-    void MultithreadPredict(const string& test_path, int thread_idx, vector<float>* predict, vector<int>* Y);
+    void MultithreadPredict(const string& test_dir, const vector<string>& test_list, const string& predict_dir, int thread_idx, int thread_num);
 };
 
 
