@@ -22,30 +22,45 @@ float FtrlModel::Logistic(const fea_items& x) {
     return Sigmoid(sum);
 }
 
-void Train(const string& train_file) {
+void FtrlModel::Train(const string& train_file) {
     FILE* fp = fopen(train_file.c_str(), "r");
     fea_items idxs;
 
+    LocalFileSystem lfs;
+    Parser parser;
+    int print_idx = 0;
+    int y;
     if (fp == NULL)
         printf("file open error!");
-    while (ReadLine(fp) != NULL) {
-        int label;
-        char* begin = line;
-        begin = Split(' ', begin, label);
-        
-        while (begin != NULL && *begin != '\0' && *begin!= '\n') {
-            index_type t;
-            begin = SplitL(' ', begin, t);
-            idxs.push_back(t);
+    char* line;
+    while ((line = lfs.ReadLine(fp)) != NULL) {
+        idxs.clear();
+        parser.TabParser(line, idxs, y);
+        TrainSingleInstance(idxs, y);
+        if (print_idx %100000 == 0) {
+            printf("%s FILE:%s's %dth instance is predicting\n", Utils::GetTime().c_str(), train_file.c_str(), print_idx);
         }
-        ++idx;
-        Y.push_back(label);
-        predict.push_back(ftrl.PredictSingleInstance(idxs));
-        if (idx %100000 == 0) {
-            printf("%s %dth instance is predicting\t", Utils::GetTime().c_str(), idx);
-        }
-        idxs.clear();      
+        ++print_idx;
     }
+}
+
+void FtrlModel::Test(const string& test_file, vector<int>& Y, vector<float>& predict) {
+    FILE* fp = fopen(test_file.c_str(), "r");
+    fea_items idxs;
+
+    LocalFileSystem lfs;
+    Parser parser;
+    int y;
+    if (fp == NULL)
+        printf("file open error!");
+    char* line;
+    while ((line = lfs.ReadLine(fp)) != NULL) {
+        idxs.clear();
+        parser.TabParser(line, idxs, y);
+        predict.push_back(PredictSingleInstance(idxs));
+        Y.push_back(y);
+    }
+    printf("%s FILE:%s is predicted over!\n", Utils::GetTime().c_str(), test_file.c_str());
 }
 
 void FtrlModel::TrainSingleInstance(const fea_items& x, int y) {
@@ -86,7 +101,7 @@ void FtrlModel::CleanW() {
     }
 }
 
-bool FtrlModel::DumpW(const string& filename) {
+void FtrlModel::DumpW(const string& filename) {
     std::ofstream ofile;
     ofile.open(filename.c_str(), std::fstream::out);
     for (auto itr = p_.begin(); itr != p_.end(); ++itr) {
@@ -94,7 +109,6 @@ bool FtrlModel::DumpW(const string& filename) {
             ofile<<itr->first<<":"<<itr->second.w<<std::endl;
     }
     ofile.close();
-    return true;
 }
 
 /*

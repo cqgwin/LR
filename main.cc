@@ -46,101 +46,15 @@ void MultithredTrainPredict(FtrlModel& ftrl, int thread_num, string train_path, 
 }
 */
 
-index_type atoul(char *s) {
-    char* p = s;
-    unsigned long long t = 0;
-    while(p != NULL && *p != '\n' && *p != '\0') {
-        t *= 10;
-        t += *p - '0';
-        ++p;
-    }
-    return t;
-}
 
-static int max_line_len;
-static char* line = NULL;
-
-char* ReadLine(FILE* input) {
-    int len;
-    line = (char*) malloc(max_line_len * sizeof(char));
-
-    if(fgets(line, max_line_len, input) == NULL)
-        return NULL;
-    while(strrchr(line, '\n') == NULL) {
-        max_line_len *= 2;
-        line = (char*) realloc(line, max_line_len);
-        len = (int) strlen(line);
-        if(fgets(line+len, max_line_len-len, input) == NULL)
-            break;
-    }
-    return line;
-}
-
-char* SplitL(char c, char* p, index_type& num) {
-    char num_p[65];
-    int idx = 0;
-    while(p != NULL && *p != c && *p != '\0' && *p != '\n') {
-        num_p[idx] = *p;
-        ++idx;
-        ++p;
-    }
-    num_p[idx] = '\0';
-    if(*p == '\0')
-        return NULL;
-    ++p;
-    num = atoul(num_p);
-    return p;
-}
-
-
-char* Split(char c, char* p, int& num) {
-    char num_p[65];
-    int idx = 0;
-    while(p != NULL && *p != c && *p != '\0' && *p != '\n') {
-        num_p[idx] = *p;
-        ++idx;
-        ++p;
-    }
-    num_p[idx] = '\0';
-    if(*p == '\0')
-        return NULL;
-    ++p;
-    num = atoi(num_p);
-    return p;
-}
-
-void TrainPredict(FtrlModel& ftrl, const string& train_path, const string& test_path, const string& w_path, const string& predict_path) {
+void TrainPredict(FtrlModel& ftrl, const string& train_dir, const string& test_path, const string& w_path, const string& predict_path) {
     printf("%s begin training...\n", Utils::GetTime().c_str());
-    FILE* fp = fopen(train_path.c_str(), "r");
+    LocalFileSystem lfs; 
+    vector<string> file_list = lfs.GetDirFiles(train_dir);
     
-    int idx = 0;
-    max_line_len = 2000;
-    fea_items idxs;
-    if (fp == NULL)
-        printf("file open error!");
-    while(ReadLine(fp) != NULL) {
-        int label;
-        char* begin = line;
-        //printf("%s\n", line);
-        begin = Split(' ', begin, label);
-        //printf("label splited!\n");
-        while(begin != NULL && *begin != '\0' && *begin!= '\n') {
-            index_type t;
-            begin = SplitL(' ', begin, t);
-            idxs.push_back(t);
-            //printf("%lld ",t);
-        }
-        ++idx;
-        //printf("begin training!\n");
-        if(label == -1)
-            label = 0;
-        ftrl.TrainSingleInstance(idxs, label);
-        //printf("end training!\n");
-        if(idx %100000 == 0) {
-            printf("%s %dth instance is training\t", Utils::GetTime().c_str(), idx);
-            printf("average loss is: %f\n", ftrl.AvgLoss());
-        }
-        idxs.clear();
+    for (auto pos = file_list.begin(); pos != file_list.end(); ++pos) {
+        string train_path = *pos;
+        ftrl.Train(train_path);
     }
     printf("%s train over!\n", Utils::GetTime().c_str());
     
@@ -150,25 +64,14 @@ void TrainPredict(FtrlModel& ftrl, const string& train_path, const string& test_
     vector<int> Y;
     
     printf("%s begin predicting...\n", Utils::GetTime().c_str());
-    FILE* fd = fopen(test_path.c_str(), "r"); 
-    idx = 0;
-    while(ReadLine(fd) != NULL) {
-        int label;
-        char* begin = line;
-        begin = Split(' ', begin, label);
-        while(begin != NULL && *begin != '\0' && *begin!= '\n') {
-            index_type t;
-            begin = SplitL(' ', begin, t);
-            idxs.push_back(t);
-        }
-        ++idx;
-        Y.push_back(label);
-        predict.push_back(ftrl.PredictSingleInstance(idxs));
-        if(idx %100000 == 0) {
-            printf("%s %dth instance is predicting\t", Utils::GetTime().c_str(), idx);
-        }
-        idxs.clear();
-    }
+    
+    file_list.clear();
+    file_list = lfs.GetDirFiles(train_dir);
+    
+    for (auto pos = file_list.begin(); pos != file_list.end(); ++pos) {
+        string test_path = *pos;
+        ftrl.Test(test_path, Y, predict);
+    } 
     printf("%s predict over!\n", Utils::GetTime().c_str());
     float auc = Utils::GetAUC(predict, Y);
     printf("auc is: %f\n", auc);
@@ -180,7 +83,6 @@ void TrainPredict(FtrlModel& ftrl, const string& train_path, const string& test_
 
 
 int main(int argc, char** argv) {
-    //int feature_length = atoi(argv[1]);
     string train_path = argv[1];
     string w_path = argv[2];
     string test_path = argv[3];

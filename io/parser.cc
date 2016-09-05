@@ -65,6 +65,6 @@ void Parser::TabParser(char* line, fea_items& X, int& Y) {
     while (begin != NULL && *begin != '\0' && *begin != '\n') {
         index_type t;
         begin = SplitL(' ', begin, t);
-        x.push_back(t);
+        X.push_back(t);
     }
 }

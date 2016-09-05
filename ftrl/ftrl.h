@@ -9,6 +9,8 @@
 #include <iostream>
 
 #include "common/utils.h"
+#include "io/local_filesys.h"
+#include "io/parser.h"
 
 struct pnode{
     float w;
@@ -63,7 +65,7 @@ public:
     float Logistic(const fea_items& x);
 
     void TrainSingleInstance(const fea_items& x, int y);
-    
+
     void Train(const string& train_file);
 
     void DumpW(const string& filename);
@@ -73,6 +75,8 @@ public:
     float CurrentLoss() { return current_loss_; }
 
     void MultithreadTrain(const string& path, int thread_idx);
+    
+    void Test(const string& test_file, vector<int>& Y, vector<float>& predict);
 
     float PredictSingleInstance(const fea_items &x);
     

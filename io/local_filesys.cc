@@ -32,13 +32,13 @@ vector<string> LocalFileSystem::GetDirFiles(const string& dir_name) {
 }
 
 char* LocalFileSystem::ReadLine(FILE* input) {
-    if (fget(line_, max_line_len_, input) == NULL)
+    if (fgets(line_, max_line_len_, input) == NULL)
         return NULL;
     while (strrchr(line_, '\n') == NULL) {
         max_line_len_ *= 2;
-        line = (char*) realloc(line_, max_line_len_);
+        line_ = (char*) realloc(line_, max_line_len_);
         int len = (int) strlen(line_);
-        if (fgets(line + len, max_line_len_ - len, input) == NULL)
+        if (fgets(line_ + len, max_line_len_ - len, input) == NULL)
             break;
     }
     return line_;

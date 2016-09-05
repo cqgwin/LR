@@ -19,19 +19,17 @@
 
 class LocalFileSystem : public FileSystem {
  public:
-    inline static LocalFileSystem *GetInstance(void) {
-         static LocalFileSystem instance;
-         return &instance;
-    }
     static vector<string> GetDirFiles(const string& dir_name);
+
     char* ReadLine(FILE* input);
- private:
+
     LocalFileSystem() {
         max_line_len_ = 1000;
         line_ = (char*) malloc(max_line_len_ * sizeof(char));
     }
-    static int max_line_len_;
-    static char* line_; 
+ private:
+    int max_line_len_;
+    char* line_; 
 };
 
 #endif
