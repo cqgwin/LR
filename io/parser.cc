@@ -62,6 +62,8 @@ char* Split(char c, char* p, int& num) {
 void Parser::TabParser(char* line, fea_items& X, int& Y) {
     char* begin = line;
     begin = Split(' ', begin, Y);
+    if(Y == -1)
+        Y = 0;
     while (begin != NULL && *begin != '\0' && *begin != '\n') {
         index_type t;
         begin = SplitL(' ', begin, t);

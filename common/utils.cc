@@ -8,7 +8,6 @@ bool Cmp(std::pair<float, int> a, std::pair<float, int> b) {
 float Utils::GetAUC(const std::vector<float>& predict, const std::vector<int>& Y) {
     int M = 0, N = 0;
     std::vector< std::pair<float, int> > predict_list;
-
     for (unsigned int i = 0; i < Y.size(); i++) {
         if(Y[i] == 1)
             M++;

@@ -28,7 +28,7 @@ void FtrlModel::Train(const string& train_file) {
 
     LocalFileSystem lfs;
     Parser parser;
-    int print_idx = 0;
+    int print_idx = 1;
     int y;
     if (fp == NULL)
         printf("file open error!");
@@ -38,7 +38,7 @@ void FtrlModel::Train(const string& train_file) {
         parser.TabParser(line, idxs, y);
         TrainSingleInstance(idxs, y);
         if (print_idx %100000 == 0) {
-            printf("%s FILE:%s's %dth instance is predicting\n", Utils::GetTime().c_str(), train_file.c_str(), print_idx);
+            printf("%s FILE:%s's %dth instance is training\n", Utils::GetTime().c_str(), train_file.c_str(), print_idx);
         }
         ++print_idx;
     }
@@ -101,7 +101,7 @@ void FtrlModel::TrainSingleInstance(const fea_items& x, int y) {
 
 void FtrlModel::CleanW() {
     for (auto itr = p_.begin(); itr != p_.end(); ++itr) {
-        if (!(itr->second.w > 10e-10 || itr->second.w < -10e-10))
+        //if (!(itr->second.w > 10e-10 || itr->second.w < -10e-10))
             itr->second.w = 0;
     }
 }
@@ -110,8 +110,9 @@ void FtrlModel::DumpW(const string& filename) {
     std::ofstream ofile;
     ofile.open(filename.c_str(), std::fstream::out);
     for (auto itr = p_.begin(); itr != p_.end(); ++itr) {
-        if (!(itr->second.w > 10e-10 || itr->second.w < -10e-10))
-            ofile<<itr->first<<":"<<itr->second.w<<std::endl;
+        //printf("%f\n", itr->second.w);
+        //if (!(itr->second.w > 10e-10 || itr->second.w < -10e-10))
+        ofile<<itr->first<<":"<<itr->second.w<<std::endl;
     }
     ofile.close();
 }

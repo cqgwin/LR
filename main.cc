@@ -65,20 +65,35 @@ void MultithreadPredict(FtrlModel& ftrl, const int thread_num, const string& tes
     printf("%s predict over!\n", Utils::GetTime().c_str());
 }
 
+string DirEndCheck(char *s) {
+    int len = strlen(s);
+    string t = s;
+    if(s[len-1] != '/')
+        t += "/";
+    return t;
+}
+
 int main(int argc, char** argv) {
-    if(argc != 4) {
-        printf("USAGE LIKE: mmibzlr train_dir w_path test_dir predict_dir\n");
+    if(argc != 5 && argc != 6) {
+        printf("USAGE LIKE: mmibzlr train_dir/ w_file test_dir/ predict_dir/||mmibzlr thread_num train_dir/ w_file test_dir/ predict_dir/\n");
         return -1;
     }
-    string train_dir = argv[1];
-    string w_path = argv[2];
-    string test_dir = argv[3];
-    string predict_dir = argv[4];
-    
-
     int thread_num = 1;
+    string train_dir, w_path, test_dir, predict_dir;
+    if(argc == 5) {
+        train_dir = DirEndCheck(argv[1]);
+        w_path = argv[2];
+        test_dir = DirEndCheck(argv[3]);
+        predict_dir = DirEndCheck(argv[4]);
+    } else {
+        thread_num = atoi(argv[1]);
+        train_dir = DirEndCheck(argv[2]);
+        w_path = argv[3];
+        test_dir = DirEndCheck(argv[4]);
+        predict_dir = DirEndCheck(argv[5]);
+    }
     FtrlModel ftrl;
-    
+    printf("%d %s %s %s %s\n", thread_num, train_dir.c_str(), w_path.c_str(), test_dir.c_str(), predict_dir.c_str()); 
     if(thread_num == 1) {
         Train(ftrl, train_dir);
         Predict(ftrl, test_dir, predict_dir);

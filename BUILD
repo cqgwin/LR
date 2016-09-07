@@ -3,7 +3,7 @@ cc_binary(
     extra_cppflags = [
         '-Wl,--no-as-needed',
         '-pthread',
-        '-std=c++11',],
+        '-std=c++0x',],
     srcs = [
     'main.cc',],
     deps = [
