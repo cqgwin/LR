@@ -1,15 +1,13 @@
-cc_binary(
-    name = 'mmbizlr2',
+cc_library(
+    name = 'sgd',
     extra_cppflags = [
         '-Wl,--no-as-needed',
         '-pthread',
-        '-std=c++0x',],
+        '-std=c++11',],
     srcs = [
-    'src/main.cc',],
+    'sgd.cc',],
     deps = [
         '//mmbiz/mmbizdatacomm/ftrl/mmbizlr/src/common:common',
         '//mmbiz/mmbizdatacomm/ftrl/mmbizlr/src/io:io',
-        '//mmbiz/mmbizdatacomm/ftrl/mmbizlr/src/sgd:sgd',
-        '//mmbiz/mmbizdatacomm/ftrl/mmbizlr/src/ftrl:ftrl',
     ],
 )

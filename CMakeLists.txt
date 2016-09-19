@@ -12,15 +12,17 @@ include_directories(
     "${PROJECT_BINARY_DIR}"
 )
 
-add_subdirectory(io)
-add_subdirectory(common)
-add_subdirectory(ftrl)
+add_subdirectory(src/io)
+add_subdirectory(src/common)
+add_subdirectory(src/ftrl)
+add_subdirectory(src/sgd)
 
 file(GLOB SOURCES 
-    main.cc
-    io/*.cc
-    commom/*.cc
-    ftrl/*.cc
+    src/main.cc
+    src/io/*.cc
+    src/commom/*.cc
+    src/ftrl/*.cc
+    src/sgd/*.cc
 )
 
 add_executable(lr ${SOURCES})
@@ -28,3 +30,4 @@ add_executable(lr ${SOURCES})
 target_link_libraries(lr io)
 target_link_libraries(lr ftrl)
 target_link_libraries(lr common)
+target_link_libraries(lr sgd)

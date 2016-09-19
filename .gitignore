@@ -2,7 +2,10 @@ blade-bin
 build64_release/
 .Building.lock
 .sconsign.dblite
-build
-common/.*
-io/.*
-ftrl/.*
+build/
+src/common/.*
+src/io/.*
+src/ftrl/.*
+src/sgd/.*
+data/.*
+python/.*

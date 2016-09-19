@@ -7,7 +7,7 @@ cc_library(
     srcs = [
     'ftrl.cc',],
     deps = [
-        '//mmbiz/mmbizdatacomm/ftrl/ftrl_lr_64/common:common',
-        '//mmbiz/mmbizdatacomm/ftrl/ftrl_lr_64/io:io',
+        '//mmbiz/mmbizdatacomm/ftrl/mmbizlr/src/common:common',
+        '//mmbiz/mmbizdatacomm/ftrl/mmbizlr/src/io:io',
     ],
 )

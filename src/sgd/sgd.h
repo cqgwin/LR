@@ -1,61 +1,33 @@
 
-#ifndef FTRL_H_
-#define FTRL_H_
+#ifndef SGD_SGD_H_
+#define SGD_SGD_H_
 
-#include <cmath>
 #include <stdlib.h>
 
 #include <fstream>
 #include <iostream>
 
+#include "../common/math.h"
 #include "../common/utils.h"
 #include "../io/local_filesys.h"
 #include "../io/parser.h"
+#include "../base_model.h"
 
 
-struct pnode{
-    float w;
-    float z;
-    float n;
-};
-
-inline int Sgn(float x) {
-    if (x < 0.)
-        return -1.;
-    else
-        return 1.;
-}
-
-inline float Sigmoid(float x) {
-    if (x < -35)
-        x = -35;
-    if (x > 35)
-        x = 35;
-    return 1 / (1 + exp(-1.0 * x));
-}
-
-inline float LogLoss(float p, float y) {
-    if(p < 10e-15)
-        p = 10e-15;
-    if(p > 1 - 10e-15)
-        p = 1 - 10e-15;
-    return -y * log(p) - (1-y) * log(1-p);
-}
-
-class FtrlModel {
-private:
-    map<index_type, pnode> p_;
-    float lambda1_;
-    float lambda2_;
-    float alpha_;
-    float beta_;
-    float total_loss_;
+class SGDModel:public BaseModel {
+ private:
+    float learning_rate_;
+    map<index_type, float> w_;
     int instance_num_;
     float current_loss_;
-public:
-    FtrlModel(float _lambda1 = 0, float _lambda2 = 0, float _alpha = 0.005, float _beta = 0.1);
+    float total_loss_;
+ 
+ public:
+    SGDModel(float _learning_rate = 0.0001);
+    
+    SetParameter(float _learning_rate);
 
-    ~FtrlModel();
+    ~SGDModel();
     
     void CleanW();
 

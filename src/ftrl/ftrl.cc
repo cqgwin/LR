@@ -1,11 +1,20 @@
-#include "sgd.h"
+#include "ftrl.h"
 
-FtrlModel::FtrlModel(float _learning_rate): learning_rate_(_learning_rate) {
-    w.clear();
+FtrlModel::FtrlModel(float _lambda1, float _lambda2, float _alpha, float _beta): lambda1_(_lambda1), lambda2_(_lambda2), alpha_(_alpha), beta_(_beta) {
+    total_loss_ = 0.0;
+    instance_num_ = 0;
+    p_.clear();
 }
 
 FtrlModel::~FtrlModel() {
-    w.clear();
+    p_.clear();
+}
+
+void SetParameter(float _lambda1, float _lambda2, float _alpha, float _beta) {
+    lambda1_ = _lambda1;
+    lambda2_ = _lambda2;
+    alpha_ = _alpha;
+    beta_ = _beta; 
 }
 
 float FtrlModel::Logistic(const fea_items& x) {
@@ -26,19 +35,15 @@ void FtrlModel::Train(const string& train_file) {
 
     LocalFileSystem lfs;
     Parser parser;
-    int print_idx = 0;
     int y;
     if (fp == NULL)
         printf("file open error!");
     char* line;
     while ((line = lfs.ReadLine(fp)) != NULL) {
+        //printf("%s\n", line);
         idxs.clear();
         parser.TabParser(line, idxs, y);
         TrainSingleInstance(idxs, y);
-        if (print_idx %100000 == 0) {
-            printf("%s FILE:%s's %dth instance is predicting\n", Utils::GetTime().c_str(), train_file.c_str(), print_idx);
-        }
-        ++print_idx;
     }
 }
 
@@ -60,8 +65,8 @@ void FtrlModel::Predict(const string& test_file, const string& predict_file) {
         predict.push_back(PredictSingleInstance(idxs));
         Y.push_back(y);
     }
-    printf("%s FILE:%s is predicted over!\n", Utils::GetTime().c_str(), test_file.c_str());
-    float auc = Utils::GetAUC(predict, Y);
+    printf("%s FILE:%s is predicted over!\n", GetTime().c_str(), test_file.c_str());
+    float auc = GetAUC(predict, Y);
     printf("FILE:%s AUC is %f\n", test_file.c_str(), auc);
     
     std::ofstream ofile;
@@ -97,27 +102,37 @@ void FtrlModel::TrainSingleInstance(const fea_items& x, int y) {
     ++instance_num_;
 }
 
-void FtrlModel::CleanW() {
-    for (auto itr = p_.begin(); itr != p_.end(); ++itr) {
-        if (!(itr->second.w > 10e-10 || itr->second.w < -10e-10))
-            itr->second.w = 0;
-    }
-}
-
-void FtrlModel::DumpW(const string& filename) {
+void FtrlModel::SaveModel(const string& model_path) { 
     std::ofstream ofile;
-    ofile.open(filename.c_str(), std::fstream::out);
+    ofile.open(model_path.c_str(), std::fstream::out);
     for (auto itr = p_.begin(); itr != p_.end(); ++itr) {
-        if (!(itr->second.w > 10e-10 || itr->second.w < -10e-10))
-            ofile<<itr->first<<":"<<itr->second.w<<std::endl;
+        ofile<<itr->first<<" "<<itr->second.w<<" "<<itr->second.z<<" "<<itr->second.n<<std::endl;
     }
     ofile.close();
 }
 
+void FtrlModel::LoadModel(const string& model_path) {
+    FILE* fp = fopen(model_path.c_str(), "r");
+    std::ifstream in(model_path);
+    index_type idx;
+    float w, z, n;
+    LocalFileSystem lfs;
+    printf("model path is %s\n", model_path.c_str());
+    int ii = 1;
+    while (!in.eof() ) {
+        in>>idx>>w>>z>>n;
+        pnode t = {w,z,n};
+        p_.insert(std::pair<index_type, pnode>(idx, t));
+    }
+}
+
 void FtrlModel::MultithreadTrain(const string& train_dir, const vector<string>& train_list, int thread_idx, int thread_num) {
     for(unsigned int i = 0; i <  train_list.size(); ++i) {
-        if((int)(i % thread_num) == thread_idx)
+        if((int)(i % thread_num) == thread_idx) {
+            printf("%s in thread %d, FILE:%s is trainging!\n", GetTime().c_str(), thread_idx, train_list[i].c_str());
             Train(train_dir + train_list[i]);
+            printf("%s in thread %d, FILE:%s is trained over!\n", GetTime().c_str(), thread_idx, train_list[i].c_str());
+        }
     }
 }
 

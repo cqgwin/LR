@@ -5,7 +5,8 @@ bool Cmp(std::pair<float, int> a, std::pair<float, int> b) {
     return a.first > b.first;
 }
 
-float Utils::GetAUC(const std::vector<float>& predict, const std::vector<int>& Y) {
+
+float GetAUC(const std::vector<float>& predict, const std::vector<int>& Y) {
     int M = 0, N = 0;
     std::vector< std::pair<float, int> > predict_list;
     for (unsigned int i = 0; i < Y.size(); i++) {
@@ -80,11 +81,3 @@ float Utils::GetAUC(const std::vector<float>& predict, const std::vector<int>& Y
     return sum / N;
 }
 
-string Utils::GetTime() {
-    time_t t = time(NULL);
-    struct tm* current_time = localtime(&t);
-    char buff[15];
-    sprintf(buff, "%4d-%d-%d %2d:%2d:%2d", current_time->tm_year + 1900, current_time->tm_mon + 1, current_time->tm_mday, current_time->tm_hour,current_time->tm_min, current_time->tm_sec);
-    string result(buff);
-    return result;
-}

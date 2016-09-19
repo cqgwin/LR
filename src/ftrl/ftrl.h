@@ -1,28 +1,41 @@
 
-#ifndef SGD_H_
-#define SGD_H_
+#ifndef FTRL_FTRL_H_
+#define FTRL_FTRL_H_
 
-#include <cmath>
 #include <stdlib.h>
 
 #include <fstream>
 #include <iostream>
 
+#include "../common/math.h"
 #include "../common/utils.h"
 #include "../io/local_filesys.h"
 #include "../io/parser.h"
+#include "../base_model.h"
 
+struct pnode{
+    float w;
+    float z;
+    float n;
+};
 
-class SGDModel {
+class FtrlModel:public BaseModel {
 private:
-    float learning_rate_;
+    map<index_type, pnode> p_;
+    float lambda1_;
+    float lambda2_;
+    float alpha_;
+    float beta_;
+    float total_loss_;
+    int instance_num_;
+    float current_loss_;
 public:
-    SGDModel(float _learning_rate = 0.0001);
+    FtrlModel(float _lambda1 = 0, float _lambda2 = 0, float _alpha = 0.005, float _beta = 0.1);
+    
+    void SetParameter(float _lambda1 = 0, float _lambda2 = 0, float _alpha = 0.005, float _beta = 0.1);
 
     ~FtrlModel();
-    
-    void CleanW();
-
+      
     float AbsW();
 
     float AvgLoss();
@@ -33,7 +46,9 @@ public:
 
     void Train(const string& train_file);
 
-    void DumpW(const string& filename);
+    void SaveModel(const string& model_path);
+
+    void LoadModel(const string& model_path);
 
     float ObjectFunctionValue();
 
@@ -47,7 +62,6 @@ public:
     
     void MultithreadPredict(const string& test_dir, const vector<string>& test_list, const string& predict_dir, int thread_idx, int thread_num);
 };
-
 
 
 #endif
