@@ -1,5 +1,5 @@
 cc_binary(
-    name = 'mmbizlr2',
+    name = 'lr',
     extra_cppflags = [
         '-Wl,--no-as-needed',
         '-pthread',
